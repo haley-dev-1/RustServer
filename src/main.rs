@@ -1,7 +1,15 @@
+
+/* 
+ * UDP Server
+ *  Haley Lind
+ *   Rust/Cyber/Networks Journey
+ */
+
+
 use std::net::UdpSocket;
 
 fn main() -> std::io::Result<()> {
-	println!("Hello, world!");
+	println!("Hello, world!\n");
 	
 	{
 		// our UDP socket
@@ -10,20 +18,19 @@ fn main() -> std::io::Result<()> {
 		// lets have a buffer of size 10 for our sock to write to
 		let mut buff = [67; 10];
 
+		println!("\nWaiting to receive information...");
+
+
 		loop {
-			println!("Waiting to receive information...");
 
 			let (amnt, src) = sock.recv_from(&mut buff).expect("message too long");
-			println!("got {amnt} bytes from {src}");
 			
 			let buff = &mut buff[..amnt]; 		// grabs bytes from buffer
-			println!("{:?}", &buff);	// displays bytes, formatted
+			println!("CLIENT: [{src}] {:?}", &buff);
 
-	//		println!("we will buff.reverse...");
-			buff.reverse();
-	//		println!("{:?}", &buff[..amnt]);	// displays bytes, formatted
+			// we can do manipulation to the UDP message here e.g. reverse
+			// buff.reverse();
 
-			println!("now we will send to buffer...");
 			sock.send_to(buff, &src)?;
 	
 			let msg = &buff;

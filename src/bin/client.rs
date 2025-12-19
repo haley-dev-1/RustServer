@@ -1,28 +1,47 @@
+
+/*
+ * UDP client
+ *  Haley Lind
+ *   Rust Journey 2025
+ */
+
+
 use std::net::UdpSocket;
+use std::time;
+use std::io;
 
 fn main() -> std::io::Result<()> {
 
 	println!("Hello client\n");
 
-	// our client socket
+	// client and server sockets here
 	let sock = UdpSocket::bind("127.0.0.1:0")?;
 	let server = "127.0.0.1:3400";
 
 	loop {
 		
 		// build an empty message to send, e.g. "quit"
-		let msg: &[u8] = &[0; 10]; // array of 10 bytes	
+		//let mut msg: &[u8] = b"hello"; 		// byte literal 	
 			
-		// alter message based on input from cli
-
+		// get user input
+		let mut msg_line = String::new();
+		io::stdin().read_line(&mut msg_line);
+		let msg = &msg_line.as_bytes().trim_ascii_end();
+		
 		// send message to server, server is bound to 34000
-		sock.send_to(msg, server)?;
-		println!("sent {:?}", msg);
+		
+		sock.send_to(&msg, server)?;
+		println!("sent {:?}", &msg);
 		
 		// exit condition: 
-		if msg ==b"quit" {
+		if msg == b"quit" {
 			break;
 		}
+
+		println!("quit was sent, exitting now!");
+		
+		std::thread::sleep(time::Duration::from_millis(500));
+
 	}
 
 
