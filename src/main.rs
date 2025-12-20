@@ -2,12 +2,12 @@
 
 
 /* 
- *   UDP Server
+ *   TCP Server
  *   by Haley Lind
  *   Rust/Cyber/Networks Journey
 */
 
-use std::net::UdpSocket;
+use std::net::{TcpStream, TcpListener};
 use std::collections::HashMap;
 use std::time::Instant;
 
@@ -26,14 +26,28 @@ struct ClientStatistics {
 	unknown_msg_types: usize
 }
 
+fn handle_client(mut stream: TcpStream){
+
+	let mut buffer = [0 as u8; MAX_TRANSMISSION_UNIT];
+	
+	// reads stream, stores read data into the buffer.
+	stream.read(&mut buffer).expect("Failed to read from client");
+	
+	// handles converting data in buffer to utf8 string :) 
+	let request = String::from_utf8_lossy(&buffer[..]);
+	println!("Received request: {}", request);
+	let response = String::from("Hello, Client").as_bytes();
+	stream.write(response).expect("Cannot write server response to stream");
+
+}
 
 fn main() -> std::io::Result<()> {
 
 	let mut client_table: HashMap<std::net::SocketAddr, ClientStatistics> = HashMap::new(); // keep track of the clients connected.
 	
-	{
+	{ 
 		// our UDP socket
-		let sock = UdpSocket::bind("127.0.0.1:3400")?; 
+		let sock = TcpListener::bind("127.0.0.1:3400")?; 
 
 		// lets have a buffer of size 10 for our sock to write to
 		let mut buff = [0 as u8; MAX_TRANSMISSION_UNIT];
@@ -81,7 +95,7 @@ fn main() -> std::io::Result<()> {
 
 			// TODO: Handle "quit" because only 1 client says "quit" for it to quit.	
 			if msg == b"quit" {
-				println!("Shutting down UDP server.");
+				println!("Shutting down TCP server.");
 				break;
 
 		     	}
