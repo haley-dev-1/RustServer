@@ -12,8 +12,6 @@ use std::io;
 
 fn main() -> std::io::Result<()> {
 
-	println!("Hello client\n");
-
 	// client and server sockets here
 	let sock = UdpSocket::bind("127.0.0.1:0")?;
 	let server = "127.0.0.1:3400";
@@ -26,25 +24,22 @@ fn main() -> std::io::Result<()> {
 		// get user input
 		let mut msg_line = String::new();
 		io::stdin().read_line(&mut msg_line);
+
+		// converts input string to bytes
 		let msg = &msg_line.as_bytes().trim_ascii_end();
 		
-		// send message to server, server is bound to 34000
-		
+		// send byte array message to server, server is bound to 34000
 		sock.send_to(&msg, server)?;
 		println!("sent {:?}", &msg);
 		
 		// exit condition: 
 		if msg == b"quit" {
 			break;
+			println!("quit was sent, exitting now!");
 		}
-
-		println!("quit was sent, exitting now!");
 		
-		std::thread::sleep(time::Duration::from_millis(500));
-
+		std::thread::sleep(time::Duration::from_millis(50));
 	}
-
-
 	Ok(())
 }
 
