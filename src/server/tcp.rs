@@ -1,6 +1,3 @@
-
-
-
 /* 
  *   TCP Server
  *   by Haley Lind
@@ -10,7 +7,6 @@
 use std::net::{TcpStream, TcpListener};
 use std::collections::HashMap;
 use std::time::Instant;
-
 
 const MAX_TRANSMISSION_UNIT: usize = 1200; // in bytes
 
