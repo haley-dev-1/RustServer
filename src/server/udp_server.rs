@@ -1,8 +1,5 @@
-
-
-
 /* 
- *   TCP Server
+ *   UDP Server
  *   by Haley Lind
  *   Rust/Cyber/Networks Journey
 */
@@ -10,7 +7,6 @@
 use std::net::{UdpSocket};
 use std::collections::HashMap;
 use std::time::Instant;
-
 
 const MAX_TRANSMISSION_UNIT: usize = 1200; // in bytes
 
